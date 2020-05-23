@@ -6,10 +6,10 @@
     </div>
     <div class="shop_container">
       <ul class="shop_list" v-if="shops.length>0">
-        <li class="shop_li border-1px" v-for="shop in shops" :key="shop.id">
+        <li class="shop_li border-1px" v-for="shop in shops" :key="shop.id" @click="$router.push('/shop')">
           <a>
             <div class="shop_left">
-              <img class="shop_img" src="./images/1.jpg">
+              <img class="shop_img" :src="shop.image_path">
             </div>
             <div class="shop_right">
               <section class="shop_detail_header">
@@ -29,7 +29,7 @@
                   </div>
                 </section>
                 <section class="shop_rating_order_right">
-                  <span class="delivery_style delivery_left">蜂鸟专送</span>
+                  <span class="delivery_style delivery_left">{{shop.delivery_mode.text}}</span>
                   <span class="delivery_style delivery_right">准时达</span>
                 </section>
               </section>
@@ -57,6 +57,12 @@
         <li>
           <img src="./images/shop_back.svg" alt="">
         </li>
+        <li>
+          <img src="./images/shop_back.svg" alt="">
+        </li>
+        <li>
+          <img src="./images/shop_back.svg" alt="">
+        </li>
       </ul>
     </div>
   </div>
@@ -68,7 +74,9 @@
   export default {
     name: "Shops",
     computed: {
-      ...mapState(['shops'])
+      ...mapState({
+        shops:state=>state.home.shops
+      })
     }
   }
 </script>

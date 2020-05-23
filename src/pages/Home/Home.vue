@@ -12,7 +12,7 @@
       </Header>
       <!--首页导航-->
       <nav class="msite_nav border-1px">
-        <div class="swiper-container">
+        <div class="swiper-container" v-if="categorys.length>0">
           <div class="swiper-wrapper">
             <div class="swiper-slide" v-for="(categorys,index) in categoryArr" :key="index">
               <a href="javascript:" class="link_to_food" v-for="(category,index) in categorys" :key="index">
@@ -25,6 +25,9 @@
           </div>
           <!-- Add Pagination -->
           <div class="swiper-pagination"></div>
+        </div>
+        <div v-else>
+          <img src="./images/msite_back.svg" alt="">
         </div>
       </nav>
       <!--首页附近商家-->
@@ -43,7 +46,12 @@
     name: "Home",
     components: {Shops},
     computed: {
-      ...mapState(['geohash', 'categorys']),
+      ...mapState({
+          geohash: state => state.home.geohash,
+          categorys: state => state.home.categorys,
+          user: state => state.user.user
+        }
+      ),
       categoryArr() {
         const arr = []
         let sArr = []

@@ -20,3 +20,33 @@ export const reqShops = ({latitude, longitude}) => ajax({
     longitude
   }
 })
+/*
+* 配置短信验证码请求
+* */
+export const reqSendCode = (phone) => ajax.get(BASE + '/sendcode', {
+  params: {
+    phone
+  }
+})
+/*
+* 手机号验证登录
+* */
+export const reqSmsLogin = (phone, code) => ajax.post(BASE + '/login_sms', {phone, code})
+
+/*
+* 用户名登录验证
+* */
+export const reqPwdLogin = (name, pwd, captcha) => ajax.post(BASE + '/login_pwd', {name, pwd, captcha})
+
+/*
+* 获取商品列表
+* */
+export const reqGoods = ()=>ajax.get('/goods')
+/*
+* 获取商家评论列表
+* */
+export const reqRatings = ()=>ajax.get('/ratings')
+/*
+* 获取商家信息
+* */
+export const reqInfo = ()=>ajax.get('/info')
