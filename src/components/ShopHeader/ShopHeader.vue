@@ -2,7 +2,7 @@
   <div class="shop-header">
     <nav class="shop-nav"
          :style="{backgroundImage: `url(${info.bgImg})`}">
-      <a class="back">
+      <a class="back" @click="$router.back()">
         <i class="iconfont icon-arrow_left"/>
       </a>
     </nav>
@@ -30,7 +30,7 @@
     </div>
     <div class="shop-header-discounts" v-if="info.supports" @click="isShowyouhui=true">
       <div class="discounts-left">
-        <div class="activity" :class="nameColor[info.supports[0].type]" >
+        <div class="activity" :class="nameColor[info.supports[0].type]">
           <span class="content-tag">
             <span class="mini-tag">{{info.supports[0].name}}</span>
           </span>
@@ -41,53 +41,54 @@
         {{info.supports.length}}个优惠
       </div>
     </div>
-    <div class="shop-brief-modal" v-show="isShowpinpai">
-      <div class="brief-modal-content">
-        <h2 class="content-title">
+      <div class="shop-brief-modal" v-show="isShowpinpai">
+        <div class="brief-modal-content">
+          <h2 class="content-title">
           <span class="content-tag">
             <span class="mini-tag">品牌</span>
           </span>
-          <span class="content-name">{{info.name}}</span>
-        </h2>
-        <ul class="brief-modal-msg">
-          <li>
-            <h3>3.5</h3>
-            <p>评分</p>
-          </li>
-          <li>
-            <h3>90单</h3>
-            <p>月售</p>
-          </li>
-          <li>
-            <h3>硅谷专送</h3>
-            <p>约28分钟</p>
-          </li>
-          <li>
-            <h3>4元</h3>
-            <p>配送费用</p>
-          </li>
-          <li>
-            <h3>1000m</h3>
-            <p>距离</p>
-          </li>
-        </ul>
-        <h3 class="brief-modal-title">
-          <span>公告</span></h3>
-        <div class="brief-modal-notice">
-          {{info.bulletin}}
+            <span class="content-name">{{info.name}}</span>
+          </h2>
+          <ul class="brief-modal-msg">
+            <li>
+              <h3>3.5</h3>
+              <p>评分</p>
+            </li>
+            <li>
+              <h3>90单</h3>
+              <p>月售</p>
+            </li>
+            <li>
+              <h3>硅谷专送</h3>
+              <p>约28分钟</p>
+            </li>
+            <li>
+              <h3>4元</h3>
+              <p>配送费用</p>
+            </li>
+            <li>
+              <h3>1000m</h3>
+              <p>距离</p>
+            </li>
+          </ul>
+          <h3 class="brief-modal-title">
+            <span>公告</span></h3>
+          <div class="brief-modal-notice">
+            {{info.bulletin}}
+          </div>
+          <div class="mask-footer" @click="isShowpinpai=false">
+            <span class="iconfont icon-close"></span>
+          </div>
         </div>
-        <div class="mask-footer" @click="isShowpinpai=false">
-          <span class="iconfont icon-close"></span>
-        </div>
+        <div class="brief-modal-cover" @click="isShowpinpai=false"></div>
       </div>
-      <div class="brief-modal-cover" @click="isShowpinpai=false"></div>
-    </div>
     <div class="activity-sheet" v-show="isShowyouhui">
       <div class="activity-sheet-content">
         <h2 class="activity-sheet-title">
           优惠活动</h2>
         <ul class="list">
-          <li class="activity-item" :class="nameColor[support.type]" v-for="(support,index) in info.supports" :key="index">
+          <li class="activity-item" :class="nameColor[support.type]" v-for="(support,index) in info.supports"
+              :key="index">
             <span class="content-tag">
               <span class="mini-tag">{{support.name}}</span>
             </span>
@@ -106,13 +107,14 @@
 
 <script>
   import {mapState} from 'vuex'
+
   export default {
     name: "ShopHeader",
-    data(){
+    data() {
       return {
-        isShowyouhui:false,
-        isShowpinpai:false,
-        nameColor:['activity-green','activity-red','activity-orange']
+        isShowyouhui: false,
+        isShowpinpai: false,
+        nameColor: ['activity-green', 'activity-red', 'activity-orange']
       }
     },
     computed: {
@@ -333,45 +335,178 @@
       flex-direction column
       color #333
 
-      .brief-modal-cover
-        position absolute
-        width 100%
-        height 100%
-        top 0
-        left 0
-        background-color rgba(0, 0, 0, .5)
-        z-index 1
+  .brief-modal-cover
+    position absolute
+    width 100%
+    height 100%
+    top 0
+    left 0
+    background-color rgba(0, 0, 0, .5)
+    z-index 1
 
-      .brief-modal-content
+  .brief-modal-content
+    position relative
+    width 80%
+    padding 25px 20px
+    border-radius 5px
+    background #fff
+    z-index 99
+    display flex
+    flex-direction column
+
+    .content-title
+      font-size 20px
+      line-height 24px
+      font-weight 700
+      white-space nowrap
+      position relative
+      display flex
+      align-items center
+      justify-content center
+
+      > span
+        font-weight 600
+
+      .content-tag
+        border-radius 2px
+        background-image linear-gradient(90deg, #fff100, #ffe339)
+        width 36px
+        height: 18px
+        margin-right 10px
+        color #6a3709
+        font-style normal
         position relative
-        width 80%
-        padding 25px 20px
-        border-radius 5px
-        background #fff
-        z-index 99
-        display flex
-        flex-direction column
 
-        .content-title
-          font-size 20px
-          line-height 24px
-          font-weight 700
-          white-space nowrap
-          position relative
+        .mini-tag
+          position absolute
+          left 0
+          top 0
+          right -100%
+          bottom -100%
+          font-size 24px
+          transform scale(.5)
+          transform-origin 0 0
           display flex
           align-items center
           justify-content center
 
-          > span
-            font-weight 600
+    .brief-modal-msg
+      display flex
+      margin 20px -10px 0
+
+      > li
+        flex 1
+        text-align center
+
+        > h3
+          font-size 15px
+          font-weight 600
+          color #333
+          margin-bottom 8px
+
+        > p
+          font-size 12px
+          color #999
+
+    .brief-modal-title
+      position relative
+      text-align center
+      margin 15px auto 15px
+      width 85px
+      background-image linear-gradient(90deg, #fff, #333 50%, #fff)
+      background-size 100% 1px
+      background-position 50%
+      background-repeat no-repeat
+
+      > span
+        font-size 12px
+        padding 0 6px
+        color #999
+        background-color #fff
+
+    .brief-modal-notice
+      font-size 13px
+      line-height 1.54
+      color #333
+      overflow-y auto
+
+    .mask-footer
+      position absolute
+      bottom -60px
+      left 50%
+      padding 6px
+      border 1px solid rgba(255, 255, 255, .7)
+      border-radius 50%
+      transform translateX(-50%)
+
+      span
+        font-size 16px
+        color rgba(255, 255, 255, .7)
+
+  .activity-sheet
+    position fixed
+    top 0
+    left 0
+    width 100%
+    height 100%
+    z-index 99
+
+    &.move-enter-active, &.move-leave-active
+      transition opacity .3s
+
+    &.move-enter-active, &.move-leave-active
+      opacity 0
+
+    .activity-sheet-content
+      position absolute
+      background-color #f5f5f5
+      box-shadow 0 -1px 5px 0 rgba(0, 0, 0, .4)
+      bottom 0
+      left 0
+      right 0
+      z-index 100
+      padding 20px 30px
+      box-sizing border-box
+      transition transform .2s
+      will-change transform
+      color #333
+
+      .activity-sheet-title
+        text-align center
+        font-size 20px
+        font-weight 600
+        margin-bottom 20px
+
+      .list
+        font-size 16px
+        height 160px
+        overflow-y auto
+
+        .activity-item
+          margin-bottom 12px
+          display flex
+          font-size 13px
+          align-items center
+
+          &.activity-green
+            .content-tag
+              background-color rgb(112, 188, 70)
+
+          &.activity-red
+            .content-tag
+              background-color rgb(240, 115, 115)
+
+          &.activity-orange
+            .content-tag
+              background-color: rgb(241, 136, 79)
 
           .content-tag
+            display inline-block
             border-radius 2px
-            background-image linear-gradient(90deg, #fff100, #ffe339)
             width 36px
             height: 18px
             margin-right 10px
-            color #6a3709
+            color #fff
             font-style normal
             position relative
 
@@ -388,156 +523,23 @@
               align-items center
               justify-content center
 
-        .brief-modal-msg
-          display flex
-          margin 20px -10px 0
+      .activity-sheet-close
+        position absolute
+        right 6px
+        top 10px
+        width 25px
+        height 25px
 
-          > li
-            flex 1
-            text-align center
+        > span
+          font-size 20px
 
-            > h3
-              font-size 15px
-              font-weight 600
-              color #333
-              margin-bottom 8px
-
-            > p
-              font-size 12px
-              color #999
-
-        .brief-modal-title
-          position relative
-          text-align center
-          margin 15px auto 15px
-          width 85px
-          background-image linear-gradient(90deg, #fff, #333 50%, #fff)
-          background-size 100% 1px
-          background-position 50%
-          background-repeat no-repeat
-
-          > span
-            font-size 12px
-            padding 0 6px
-            color #999
-            background-color #fff
-
-        .brief-modal-notice
-          font-size 13px
-          line-height 1.54
-          color #333
-          overflow-y auto
-
-        .mask-footer
-          position absolute
-          bottom -60px
-          left 50%
-          padding 6px
-          border 1px solid rgba(255, 255, 255, .7)
-          border-radius 50%
-          transform translateX(-50%)
-
-          span
-            font-size 16px
-            color rgba(255, 255, 255, .7)
-
-    .activity-sheet
-      position fixed
-      top 0
-      left 0
+    .activity-sheet-cover
+      position absolute
       width 100%
       height 100%
-      z-index 99
-
-      &.move-enter-active, &.move-leave-active
-        transition opacity .3s
-
-      &.move-enter-active, &.move-leave-active
-        opacity 0
-
-      .activity-sheet-content
-        position absolute
-        background-color #f5f5f5
-        box-shadow 0 -1px 5px 0 rgba(0, 0, 0, .4)
-        bottom 0
-        left 0
-        right 0
-        z-index 100
-        padding 20px 30px
-        box-sizing border-box
-        transition transform .2s
-        will-change transform
-        color #333
-
-        .activity-sheet-title
-          text-align center
-          font-size 20px
-          font-weight 600
-          margin-bottom 20px
-
-        .list
-          font-size 16px
-          height 160px
-          overflow-y auto
-
-          .activity-item
-            margin-bottom 12px
-            display flex
-            font-size 13px
-            align-items center
-
-            &.activity-green
-              .content-tag
-                background-color rgb(112, 188, 70)
-
-            &.activity-red
-              .content-tag
-                background-color rgb(240, 115, 115)
-
-            &.activity-orange
-              .content-tag
-                background-color: rgb(241, 136, 79)
-
-            .content-tag
-              display inline-block
-              border-radius 2px
-              width 36px
-              height: 18px
-              margin-right 10px
-              color #fff
-              font-style normal
-              position relative
-
-              .mini-tag
-                position absolute
-                left 0
-                top 0
-                right -100%
-                bottom -100%
-                font-size 24px
-                transform scale(.5)
-                transform-origin 0 0
-                display flex
-                align-items center
-                justify-content center
-
-        .activity-sheet-close
-          position absolute
-          right 6px
-          top 10px
-          width 25px
-          height 25px
-
-          > span
-            font-size 20px
-
-      .activity-sheet-cover
-        position absolute
-        width 100%
-        height 100%
-        top 0
-        left 0
-        background-color rgba(0, 0, 0, .5)
+      top 0
+      left 0
+      background-color rgba(0, 0, 0, .5)
 
 </style>
 
