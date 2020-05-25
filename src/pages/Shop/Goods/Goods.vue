@@ -3,21 +3,24 @@
     <div class="goods">
       <div class="menu-wrapper" ref="left">
         <ul ref="leftUl">
-          <li class="menu-item" v-for="(good,index) in goods" :key="index"
-              :class="{current: currentIndex === index}" @click="selectItem(index)">
+          <!-- current  currentIndex-->
+          <li class="menu-item" :class="{current: currentIndex===index}"
+              v-for="(good, index) in goods" :key="good.name" @click="selectItem(index)">
             <span class="text bottom-border-1px">
-              <img class="icon" :src="good.icon" v-if="good.icon">
+              <img class="icon" v-if="good.icon" :src="good.icon">
               {{good.name}}
             </span>
           </li>
         </ul>
       </div>
+
       <div class="foods-wrapper" ref="right">
         <ul ref="rightUl">
           <li class="food-list-hook" v-for="good in goods" :key="good.name">
             <h1 class="title">{{good.name}}</h1>
             <ul>
-              <li class="food-item bottom-border-1px" v-for="food in good.foods" :key="food.name">
+              <li class="food-item bottom-border-1px" v-for="food in good.foods"
+                  :key="food.name" @click="showFood(food)">
                 <div class="icon">
                   <img width="57" height="57" :src="food.icon">
                 </div>
@@ -29,10 +32,10 @@
                     <span>好评率{{food.rating}}%</span></div>
                   <div class="price">
                     <span class="now">￥{{food.price}}</span>
-                    <span class="now" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
+                    <span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
                   </div>
                   <div class="cartcontrol-wrapper">
-                    <CartControl :food="food" />
+                    <CartControl :food="food"/>
                   </div>
                 </div>
               </li>
@@ -40,30 +43,26 @@
           </li>
         </ul>
       </div>
+
       <ShopCard/>
     </div>
-  </div>
 
+    <Food ref="food" :food="food"/>
+  </div>
 </template>
 
 <script>
   import {mapState} from 'vuex'
   import BScroll from 'better-scroll'
   import ShopCard from "../../../components/ShopCard/ShopCard";
-
+  import Food from "../../../components/Food/Food";
   export default {
-    name: "Goods",
-    components: {ShopCard},
+    components: { ShopCard,Food},
     data() {
       return {
         scrollY: 0,
-        tops: []
-      }
-    },
-    mounted() {
-      if (this.goods.length > 0) {
-        this.initScroll()
-        this.initTops()
+        tops: [],
+        food: {}
       }
     },
     computed: {
@@ -93,7 +92,6 @@
     },
     methods: {
       initScroll() {
-
         this.leftScroll = new BScroll(this.$refs.left, {
           click: true
         })
@@ -102,7 +100,6 @@
           probeType: 1
         })
         this.rightScroll.on('scroll', ({x, y}) => {
-          console.log(x, y)
           this.scrollY = Math.abs(y)
         })
         this.rightScroll.on('scrollEnd', ({x, y}) => {
@@ -119,12 +116,16 @@
           tops.push(top)
         })
         this.tops = tops
-        console.log(tops)
       },
       selectItem(index) {
         const top = this.tops[index]
         this.scrollY = top
         this.rightScroll.scrollTo(0, -top, 500)
+      },
+      showFood(food) {
+        this.food = food
+        // 显示food组件界面
+        this.$refs.food.toggleShow()
       }
     }
   }

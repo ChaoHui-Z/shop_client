@@ -8,7 +8,7 @@ const state = {
   latitude: '34.75',
   longitude: '113.60',
   geohash: {},// 获取地区位置
-  categorys: [],// 获取视频分类列表
+  categorys: [],// 获取食品分类列表
   shops: [], // 获取商铺列表
 }
 const mutations = {

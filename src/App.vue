@@ -13,6 +13,8 @@
     components: {FooterGuide},
     mounted() {
       this.$store.dispatch('getGeohash')
+      this.$store.dispatch('getCategorys')
+      this.$store.dispatch('getShops')
     }
   }
 </script>

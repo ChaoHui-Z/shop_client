@@ -68,10 +68,6 @@
         return arr
       }
     },
-    mounted() {
-      this.$store.dispatch('getShops')
-      this.$store.dispatch('getCategorys')
-    },
     watch: {
       categorys() {
         this.$nextTick(() => {
