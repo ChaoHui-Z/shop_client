@@ -2,22 +2,22 @@
   <div>
     <div class="goods">
       <div class="menu-wrapper" ref="left">
-        <ul>
-          <li class="menu-item" :class="{current:currentIndex===index}" v-for="(good,index) in goods" :key="good.name">
+        <ul ref="leftUl">
+          <li class="menu-item" v-for="(good,index) in goods" :key="index"
+              :class="{current: currentIndex === index}" @click="selectItem(index)">
             <span class="text bottom-border-1px">
-              <img class="icon" v-if="good.icon" :src="good.icon">
+              <img class="icon" :src="good.icon" v-if="good.icon">
               {{good.name}}
             </span>
           </li>
-
         </ul>
       </div>
       <div class="foods-wrapper" ref="right">
-        <ul>
+        <ul ref="rightUl">
           <li class="food-list-hook" v-for="good in goods" :key="good.name">
             <h1 class="title">{{good.name}}</h1>
-            <ul v-for="food in good.foods" :key="food.name">
-              <li class="food-item bottom-border-1px">
+            <ul>
+              <li class="food-item bottom-border-1px" v-for="food in good.foods" :key="food.name">
                 <div class="icon">
                   <img width="57" height="57" :src="food.icon">
                 </div>
@@ -29,9 +29,10 @@
                     <span>好评率{{food.rating}}%</span></div>
                   <div class="price">
                     <span class="now">￥{{food.price}}</span>
+                    <span class="now" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
                   </div>
                   <div class="cartcontrol-wrapper">
-                    CartControl组件
+                    <CartControl :food="food" />
                   </div>
                 </div>
               </li>
@@ -39,6 +40,7 @@
           </li>
         </ul>
       </div>
+      <ShopCard/>
     </div>
   </div>
 
@@ -46,14 +48,22 @@
 
 <script>
   import {mapState} from 'vuex'
-  import BetterScroll from 'better-scroll'
+  import BScroll from 'better-scroll'
+  import ShopCard from "../../../components/ShopCard/ShopCard";
 
   export default {
     name: "Goods",
+    components: {ShopCard},
     data() {
       return {
         scrollY: 0,
-        tops: [0, 5, 8, 10]
+        tops: []
+      }
+    },
+    mounted() {
+      if (this.goods.length > 0) {
+        this.initScroll()
+        this.initTops()
       }
     },
     computed: {
@@ -62,23 +72,66 @@
       }),
       currentIndex() {
         const {scrollY, tops} = this
-        return tops.findIndex((top, index) => scrollY >= top && scrollY < tops[index + 1])
+        const index = tops.findIndex((top, index) => {
+          return scrollY >= top && scrollY < tops[index + 1]
+        })
+        if (index != this.index && this.leftScroll) {
+          this.index = index
+          const li = this.$refs.leftUl.children[index]
+          this.leftScroll.scrollToElement(li, 300)
+        }
+        return index
       }
     },
     watch: {
       goods() {
         this.$nextTick(() => {
-          new BetterScroll(this.$refs.left, {})
-          new BetterScroll(this.$refs.right, {})
+          this.initScroll()
+          this.initTops()
         })
+      }
+    },
+    methods: {
+      initScroll() {
+
+        this.leftScroll = new BScroll(this.$refs.left, {
+          click: true
+        })
+        this.rightScroll = new BScroll(this.$refs.right, {
+          click: true,
+          probeType: 1
+        })
+        this.rightScroll.on('scroll', ({x, y}) => {
+          console.log(x, y)
+          this.scrollY = Math.abs(y)
+        })
+        this.rightScroll.on('scrollEnd', ({x, y}) => {
+          this.scrollY = Math.abs(y)
+        })
+      },
+      initTops() {
+        const tops = []
+        let top = 0
+        tops.push(top)
+        const lis = this.$refs.rightUl.children
+        Array.prototype.forEach.call(lis, li => {
+          top += li.clientHeight
+          tops.push(top)
+        })
+        this.tops = tops
+        console.log(tops)
+      },
+      selectItem(index) {
+        const top = this.tops[index]
+        this.scrollY = top
+        this.rightScroll.scrollTo(0, -top, 500)
       }
     }
   }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
+<style lang="stylus" rel="stylesheet/stylus" scoped>
   @import "../../../common/stylus/mixins.styl"
-
   .goods
     display: flex
     position: absolute

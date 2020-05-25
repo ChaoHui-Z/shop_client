@@ -1,15 +1,24 @@
 /*
 * 管理shop功能模块的状态数据模块
 * */
-import {RECEIVE_GOODS, RECEIVE_INFO, RECEIVE_RATINGS} from "../mutation_types";
+import Vue from 'vue'
+import {
+  RECEIVE_GOODS,
+  RECEIVE_INFO,
+  RECEIVE_RATINGS,
+  ADD_FOOD_CURRENT,
+  REDUCE_FOOD_CURRENT,
+  CLEAR_CART
+} from "../mutation_types";
 import {reqGoods, reqInfo, reqRatings} from "../../api";
 
-const state={
-  goods:[], // 食品列表
-  ratings:[], //商家评论
-  info:{},  //商家介绍
+const state = {
+  goods: [], // 食品列表
+  ratings: [], //商家评论
+  info: {},  //商家介绍
+  shopCard: [] // 购物车列表
 }
-const mutations={
+const mutations = {
   [RECEIVE_GOODS](state, goods) {
     state.goods = goods
   },
@@ -18,9 +27,34 @@ const mutations={
   },
   [RECEIVE_INFO](state, info) {
     state.info = info
-  }
+  },
+  [ADD_FOOD_CURRENT](state, food) {
+    if (food.current) {
+      food.current++
+    } else {
+      Vue.set(food, 'current', 1)
+      state.shopCard.push(food)
+    }
+  },
+  [REDUCE_FOOD_CURRENT](state, food) {
+    if (food.current > 0) {
+      food.current--
+      if (food.current === 0) {
+        state.shopCard.splice(state.shopCard.indexOf(food), 1)
+      }
+    }
+  },
+  //清空购物车
+  [CLEAR_CART](state) {
+    state.shopCard.forEach(food => {
+      food.current = 0
+    })
+    state.shopCard = []
+  },
+
 }
-const actions={
+
+const actions = {
   //  异步获取食品列表
   async getGoods({commit}) {
     const result = await reqGoods()
@@ -44,9 +78,26 @@ const actions={
       const info = result.data
       commit(RECEIVE_INFO, info)
     }
+  },
+  updateCurrent({commit}, {flag, food}) {
+    if (flag) {
+      commit(ADD_FOOD_CURRENT, food)
+    } else {
+      commit(REDUCE_FOOD_CURRENT, food)
+    }
   }
 }
-const getters={}
+const getters = {
+  // 总数量
+  totalCount(state) {
+    return state.shopCard.reduce((pre, food) => pre + food.current, 0)
+  },
+
+  // 总价格
+  totalPrice(state) {
+    return state.shopCard.reduce((pre, food) => pre + food.current * food.price, 0)
+  },
+}
 export default {
   state,
   mutations,

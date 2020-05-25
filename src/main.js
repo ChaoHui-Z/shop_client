@@ -6,10 +6,12 @@ import {Button} from 'mint-ui'
 import Header from "./components/Header/Header";
 import Star from "./components/Star/Star";
 import './mock/mock'
+import CartControl from "./components/CartControl/CartControl";
 
 Vue.config.productionTip = false
 Vue.component('Header',Header)
 Vue.component('Star',Star)
+Vue.component('CartControl',CartControl)
 Vue.component(Button.name,Button)
 
 new Vue({
