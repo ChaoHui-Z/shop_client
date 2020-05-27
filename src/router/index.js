@@ -23,7 +23,7 @@ import Info from "../pages/Shop/Info/Info";
 
 Vue.use(VueRouter)
 
-export default new VueRouter({
+const router=new VueRouter({
   mode: 'history',
   routes: [
     {
@@ -86,3 +86,5 @@ export default new VueRouter({
     }
   ]
 })
+
+export default router
